@@ -84,7 +84,7 @@ Primeira regra que casar:
 1. Material bruto sem destino → `inbox/`.
 2. Fato que o usuário declarou sobre si → `eu/` na hora. Mudou → substitui a linha. Passou do teto → condensa.
 3. Decisão/estado de um projeto → manifest: `## Onde paramos` (4 linhas, sobrescreve) e decisão vigente curta em `## Estado`. Passou de ~3 KB → condensa (histórico pro contexto próprio ativo do projeto ou `_arquivo/manifests/`).
-4. Técnica/tecnologia reutilizável fora do projeto, com 2+ ocorrências reais → skill `.claude/skills/tec-<nome>/SKILL.md`: a `description` diz quando carregar, o corpo guarda só o que foi vivido (armadilha, decisão, como aplicar). Já existe → acrescenta nela. Jeito de trabalhar dele → `eu/preferencias.md`.
+4. Técnica/tecnologia reutilizável fora do projeto, com 2+ ocorrências reais → skill `.claude/skills/tec-<nome>/SKILL.md`: a `description` diz quando carregar, o corpo guarda só o que foi vivido (armadilha, decisão, como aplicar). Já existe → acrescenta nela. Skill de um projeto usada ou pedida em outro → vira `tec-*` na hora (o método sobe; o específico fica no projeto, apontando para ela). Jeito de trabalhar dele → `eu/preferencias.md`.
 5. Decisão de NÃO fazer → `## Descartado` na nota ou manifest do assunto.
 6. Catálogo (projeto novo, status, apelido) → `registry/projects.md`.
 7. Nada disso → ruído de sessão. Não criar pasta nova sem o dono.
