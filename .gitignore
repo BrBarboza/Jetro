@@ -1,0 +1,19 @@
+# Projeto com git próprio fica fora; só o manifest dele entra (o hook de memória faz git add -f).
+/projects/*
+!/projects/.gitkeep
+
+node_modules/
+dist/
+build/
+.cache/
+.env*
+.dev.vars*
+*.key
+*.pem
+.claude/settings.local.json
+.claude/hooks/memoria.log
+.claude/hooks/.memoria-state.json
+.claude/hooks/.memoria-marcas.json
+.claude/hooks/.memoria.lock
+.claude/hooks/auto-git
+**/.obsidian/workspace*.json
