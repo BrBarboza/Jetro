@@ -4,9 +4,9 @@
 // Modo hook (padrão): lê o JSON do stdin, dispara um worker desacoplado e sai na hora
 //   (o Claude Code pode encerrar o processo antes de um hook lento terminar).
 // Modo worker (--worker <job>): filtra o transcript, pergunta ao Haiku o que gravar e grava em
-//   eu/novos.md, "## Onde paramos" do manifest do projeto e mental-palace/inbox/.
+//   eu/novos.md, "## Onde paramos" do manifest do projeto e inbox/.
 //   Depois faz commit e push do OS, se a raiz tiver git.
-// Nunca escreve em concepts/, technologies/ nem em código de projeto (do projeto, só o "## Onde paramos").
+// Nunca escreve em skill nem em código de projeto (do projeto, só o "## Onde paramos").
 // O que se repete 2x na fila (eu/novos.md) é promovido sozinho para eu/perfil.md ou eu/preferencias.md,
 // sem modelo decidindo o texto. Preferência que cita um projeto fica na fila, marcada, para o modelo
 // principal mover. "Padrão?" repetido soma (Nx) na entrada existente da inbox.
@@ -325,7 +325,7 @@ const ENTRADA_PADRAO = /^## \d\d:\d\d — Padrão\?/;
 const TEXTO_PADRAO = /^(.*?)(?: \((\d+)x\))?\s*$/;
 
 function arquivosInbox() {
-  const dir = path.join(ROOT, 'mental-palace', 'inbox');
+  const dir = path.join(ROOT, 'inbox');
   return fs.existsSync(dir) ? fs.readdirSync(dir).filter((n) => n.endsWith('.md')).map((n) => path.join(dir, n)) : [];
 }
 
@@ -373,7 +373,7 @@ function somarPadroes(padroes, quando, projeto) {
     if (!achou) novos.push(base);
   }
   if (!novos.length) return;
-  const inbox = path.join(ROOT, 'mental-palace', 'inbox', `${quando.slice(0, 10)}.md`);
+  const inbox = path.join(ROOT, 'inbox', `${quando.slice(0, 10)}.md`);
   fs.mkdirSync(path.dirname(inbox), { recursive: true });
   fs.appendFileSync(inbox, novos.map((p) => `\n## ${quando.slice(11)} — Padrão? [${projeto || 'geral'}]\n${p}\n`).join(''));
 }

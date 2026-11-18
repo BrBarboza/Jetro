@@ -17,4 +17,3 @@ build/
 .claude/hooks/.memoria-marcas.json
 .claude/hooks/.memoria.lock
 .claude/hooks/auto-git
-**/.obsidian/workspace*.json

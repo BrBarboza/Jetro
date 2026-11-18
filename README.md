@@ -9,7 +9,8 @@ Não é outro agente: é a forma como o Claude organiza o próprio contexto ante
 - `CLAUDE.md`: o mecanismo (roteiro, regras, agentes).
 - `ARCHITECTURE.md`: o contrato e o porquê de cada decisão.
 - `.claude/`: hooks (memória automática, revisão de push, trava de segredo), agentes e skills.
-- `eu/`, `registry/`, `projects/`, `mental-palace/`: seus dados. Vêm vazios.
+- `eu/`, `registry/`, `projects/`, `inbox/`: seus dados. Vêm vazios.
+- Conhecimento técnico que você reaproveita entre projetos vira skill `.claude/skills/tec-<nome>/`, que o Claude carrega sozinho quando a tarefa casa com a descrição. Nenhuma vem pronta: nascem do seu uso.
 
 ## Como começar
 

@@ -46,11 +46,9 @@ Contrato arquitetural do Jetro, um Knowledge OS pessoal para trabalhar com IA. M
 
 **Coordena, não absorve.** Se um projeto já tem sistema de contexto persistente próprio (ex: Context-OS `.ctxos/`), o SO nunca duplica esse conhecimento nem escreve dentro dele — detecta, ativa e aponta pra ele. Presença ou ausência é transparente pro fluxo.
 
-**Conhecimento organiza por conceito, não por projeto.** O Mental Palace responde "como usuário pensa e resolve esse tipo de problema, independente de onde o padrão surgiu" — modelo mental do operador (decisão recorrente, heurística, trade-off, preferência de arquitetura/UI), não catálogo técnico.
+**Conhecimento fica onde carrega sozinho.** Técnica reutilizável entre projetos vira skill `tec-*`, que o Claude Code carrega pela descrição quando a tarefa casa; jeito de trabalhar do dono vira linha em `eu/preferencias.md`, que carrega sempre; padrão de um projeto só fica no projeto. Conhecimento que depende de alguém abrir um índice não é lido (Revisão de 17/11/2026).
 
-**Fato declarado entra na hora; padrão inferido exige repetição.** O que o dono diz sobre si (quem é, situação, meta, pessoa, preferência) entra em `eu/` na primeira vez — esperar repetição para fato declarado é perder memória. Padrão de trabalho e conceito, que são inferência, só viram nota permanente depois de 2+ ocorrências reais — nunca por evento isolado, nunca por achismo. Gatilho condicional pra dado de identidade já falhou uma vez aqui (`identity/`, jul/2026): por isso `eu/` é importado pelo kernel, não lido por gatilho.
-
-**Isolamento significa coisas opostas em cada pasta do vault.** Nota de `concepts/` que não conecta a nada é sintoma: provavelmente é referência técnica na pasta errada, ou não deveria existir. Nota de `padroes-operador/` isolada é o estado normal — padrão de operador descreve o usuário, não se relaciona com outros conceitos por natureza. Densidade de grafo não é métrica de saúde uniforme do vault.
+**Fato declarado entra na hora; padrão inferido exige repetição.** O que o dono diz sobre si (quem é, situação, meta, pessoa, preferência) entra em `eu/` na primeira vez — esperar repetição para fato declarado é perder memória. Padrão de trabalho e técnica, que são inferência, só viram regra ou skill permanente depois de 2+ ocorrências reais — nunca por evento isolado, nunca por achismo. Gatilho condicional pra dado de identidade já falhou uma vez aqui (`identity/`, jul/2026): por isso `eu/` é importado pelo kernel, não lido por gatilho.
 
 **Captura crua não é classificação.** Entrada bruta pode ficar não classificada por tempo indeterminado sem que isso seja dívida — o custo de decidir no momento da captura é maior que o custo de decidir em lote depois. Distribuir é ato deliberado, não reflexo de sessão — vale só para captura crua sem repetição; o que se repete 2x é promovido sozinho (Revisão de 15/11/2026).
 
@@ -62,7 +60,7 @@ Contrato arquitetural do Jetro, um Knowledge OS pessoal para trabalhar com IA. M
 
 **Domínio é a vida do dono; software é o mais frequente.** Projeto de qualquer domínio (conteúdo, igreja, estudo, casa) vive em `projects/<nome>/`, nem que seja só com um manifest, e entra no registry com tipo. Isso não transforma o OS em gestor de tarefas: ele guarda contexto, não agenda nem cobra execução.
 
-**Camadas internas são invisíveis.** Registry, Mental Palace e Manifest são mecanismo, não vocabulário de conversa. Nunca aparecem numa resposta ao usuário.
+**Camadas internas são invisíveis.** Registry e Manifest são mecanismo, não vocabulário de conversa. Nunca aparecem numa resposta ao usuário.
 
 **Ativação por intenção, não por comando.** Mencionar um projeto pelo nome já basta pra carregar contexto — nunca exigir "abra o manifest".
 

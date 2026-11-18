@@ -91,18 +91,18 @@ ok('terceira vez só conta, mantém a marca', ler('eu/novos.md').includes(`${PRO
 
 // 4. "Padrão?" soma entre sessões, em vez de abrir entrada nova.
 const PADRAO = 'Sempre pedir print antes de mexer em tela';
-const hoje = () => fs.readdirSync(`${jetro}/mental-palace/inbox`).filter((f) => f.endsWith('.md'));
+const hoje = () => fs.readdirSync(`${jetro}/inbox`).filter((f) => f.endsWith('.md'));
 sessao({ padroes: [PADRAO] });
-ok('padrão novo cria entrada', hoje().length === 1 && ler(`mental-palace/inbox/${hoje()[0]}`).includes(PADRAO));
+ok('padrão novo cria entrada', hoje().length === 1 && ler(`inbox/${hoje()[0]}`).includes(PADRAO));
 s = sessao({ padroes: [] });
 ok('prompt do Haiku leva os padrões pendentes', s.prompt.includes('PADRÕES PENDENTES') && s.prompt.includes(`- ${PADRAO}`), s.prompt.slice(-400));
 ok('prompt manda repetir o texto exato do padrão', s.prompt.includes('PADRÕES PENDENTES, inclua em "padroes" com o texto EXATO'));
 sessao({ padroes: [PADRAO] });
-let inbox = ler(`mental-palace/inbox/${hoje()[0]}`);
+let inbox = ler(`inbox/${hoje()[0]}`);
 ok('mesma frase em outra sessão ganha (2x) na entrada existente', inbox.includes(`${PADRAO} (2x)`), inbox);
 ok('não abre entrada nova', linhaDe(inbox, 'Padrão?').length === 1, inbox);
 sessao({ padroes: [`${PADRAO} (2x)`] });
-inbox = ler(`mental-palace/inbox/${hoje()[0]}`);
+inbox = ler(`inbox/${hoje()[0]}`);
 ok('terceira soma 3x, ainda uma entrada só', inbox.includes(`${PADRAO} (3x)`) && linhaDe(inbox, 'Padrão?').length === 1, inbox);
 
 // 5. Teto: manifest acima do limite marca o topo da fila; some quando condensado.
