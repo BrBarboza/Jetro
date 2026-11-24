@@ -62,6 +62,7 @@ Tudo por dentro, sem narrar processo, exceto a execução.
 9. **Encerramento.** Hook grava o básico; usuário sinalizou fim: `os-checkpoint`.
 10. **Marcas do hook**, no início, sem perguntar: `condensar antes de começar: <arquivo> <tam>/<teto>` no topo de `eu/novos.md` → condense e apague a linha; preferência com `[→ projeto: X]` → mova pro CLAUDE.md dele.
 11. **Várias etapas** (plan mode, plano pedido, 3+ etapas com verificação própria): `os-metodo` antes de planejar.
+12. **Pedido bagunçado, vago, novo, em conflito com decisão ou caro de refazer**: `os-tradutor` antes de executar.
 
 # AGENTES E HOOKS
 

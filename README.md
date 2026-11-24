@@ -67,6 +67,7 @@ Na sexta você comenta de passagem que passou a estudar para um concurso. Isso e
 | Agentes `explorador`, `atualizador`, `revisor` | Trabalho mecânico e barato: buscar, sincronizar manifest, revisar. |
 | Skills `kit-*` | Caixa de ferramentas por tipo de tarefa: `kit-landing-page` (método de conversão + script que tira print de celular e computador e aponta defeitos) e `kit-app-web` (feature ponta a ponta + regras de código TypeScript). |
 | `toolbox/` | Almoxarifado: o README lista repositórios de onde tirar peças prontas; `node toolbox/estoque.mjs` clona em `toolbox/estoque/` (fora do git). Tarefa sem kit monta um a partir dali. |
+| Skill `os-tradutor` | Pedido bagunçado (áudio, ideias misturadas, objetivo vago) vira pedido claro antes de executar: "Entendi assim", "Pronto quando", o que assumiu e o que ficou fora; no máximo 3 perguntas de clicar, numa rodada só. |
 | Skills `os-*` | Importar projeto, retomar de onde parou, fechar sessão, processar a inbox, aplicar padrão de um projeto em outro, método para tarefas longas. |
 | `.claude/scripts/verificar.mjs` | Roda typecheck, lint, build e testes e devolve só as falhas. |
 
