@@ -8,6 +8,11 @@
             "type": "command",
             "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/memoria.mjs\"",
             "timeout": 30
+          },
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/cost-tracker.mjs\"",
+            "timeout": 15
           }
         ]
       }
@@ -44,6 +49,16 @@
             "timeout": 15
           }
         ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/config-protection.mjs\"",
+            "timeout": 5
+          }
+        ]
       }
     ],
     "PostToolUse": [
@@ -53,6 +68,16 @@
           {
             "type": "command",
             "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/manifest-atraso.mjs\"",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit|Bash|PowerShell",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/suggest-compact.mjs\"",
             "timeout": 5
           }
         ]

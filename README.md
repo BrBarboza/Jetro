@@ -61,11 +61,16 @@ Na sexta você comenta de passagem que passou a estudar para um concurso. Isso e
 | Hook `revisor-push` | Barra push grande (150+ linhas) até uma revisão rodar. |
 | Hook `segredos` | Trava commit que contenha chave, token ou senha. |
 | Hook `leitura-grande` | Bloqueia ler de uma vez arquivo enorme; manda buscar o trecho. |
+| Hook `config-protection` | Barra afrouxar lint ou tsconfig para passar na verificação. |
+| Hook `cost-tracker` | Grava o custo de cada sessão (inclusive o do hook de memória) em `.claude/hooks/custos.tsv`. |
+| Hook `suggest-compact` | Avisa quando o contexto passa de 120 mil tokens. Qualquer hook, menos o de memória, desliga com a variável `JETRO_HOOKS_DESLIGADOS=nome1,nome2` (ou `*`). |
 | Agentes `explorador`, `atualizador`, `revisor` | Trabalho mecânico e barato: buscar, sincronizar manifest, revisar. |
+| Skills `kit-*` | Caixa de ferramentas por tipo de tarefa: `kit-landing-page` (método de conversão + script que tira print de celular e computador e aponta defeitos) e `kit-app-web` (feature ponta a ponta + regras de código TypeScript). |
+| `toolbox/` | Almoxarifado: o README lista repositórios de onde tirar peças prontas; `node toolbox/estoque.mjs` clona em `toolbox/estoque/` (fora do git). Tarefa sem kit monta um a partir dali. |
 | Skills `os-*` | Importar projeto, retomar de onde parou, fechar sessão, processar a inbox, aplicar padrão de um projeto em outro, método para tarefas longas. |
 | `.claude/scripts/verificar.mjs` | Roda typecheck, lint, build e testes e devolve só as falhas. |
 
-Conhecimento técnico que você reaproveita entre projetos vira skill `.claude/skills/tec-<nome>/`, que o Claude carrega sozinho quando a tarefa casa com a descrição. Nenhuma vem pronta: nascem do seu uso.
+Conhecimento técnico que você reaproveita entre projetos vira skill `.claude/skills/tec-<nome>/`, que o Claude carrega sozinho quando a tarefa casa com a descrição. Nenhuma vem pronta: nascem do seu uso. Kits (`kit-*`) podem vir prontos: são ferramenta, não lição vivida.
 
 ## O que o Jetro não é
 

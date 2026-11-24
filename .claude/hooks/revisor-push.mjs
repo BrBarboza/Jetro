@@ -8,6 +8,7 @@
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
+import { desligado } from './ligado.mjs';
 
 const LIMITE = 150;
 const FORA = [':(exclude,glob)**/*.lock', ':(exclude,glob)**/*-lock.*', ':(exclude,glob)**/*.gen.*'];
@@ -24,6 +25,7 @@ const barrar = (msg) => {
 };
 
 try {
+  if (desligado('revisor-push')) process.exit(0);
   const { tool_input: t = {}, cwd, transcript_path } = JSON.parse(fs.readFileSync(0, 'utf8') || '{}');
   const comando = semTextoLivre(String(t.command));
   const push = comando.match(subcomando('push'));

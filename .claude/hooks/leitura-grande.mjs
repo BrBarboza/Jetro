@@ -4,11 +4,13 @@
 // Qualquer falha aqui libera a leitura: o hook nunca atrapalha por erro próprio.
 
 import fs from 'node:fs';
+import { desligado } from './ligado.mjs';
 
 const LIMITE = 25 * 1024;
 const VISUAL = /\.(png|jpe?g|gif|webp|bmp|pdf)$/i;
 
 try {
+  if (desligado('leitura-grande')) process.exit(0);
   const { tool_input: t = {}, agent_type } = JSON.parse(fs.readFileSync(0, 'utf8') || '{}');
   const inteira = t.offset == null && t.limit == null;
   if (

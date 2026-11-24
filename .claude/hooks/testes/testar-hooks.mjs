@@ -1,4 +1,4 @@
-// Testes de revisor-push, manifest-atraso e verificar. Uso: node .claude/hooks/testes/testar-hooks.mjs
+// Testes de revisor-push, manifest-atraso, verificar, config-protection, cost-tracker, suggest-compact e liga/desliga. Uso: node .claude/hooks/testes/testar-hooks.mjs
 // Repositórios descartáveis ficam na pasta temporária do sistema e saem no fim. Precisa de bun e internet (instala typescript).
 import { execFileSync, spawnSync } from 'node:child_process';
 import fs from 'node:fs';
@@ -16,8 +16,8 @@ const ok = (nome, cond, extra = '') => {
   console.log(`${cond ? 'ok  ' : 'FALHA'} ${nome}${cond ? '' : ' ' + extra}`);
 };
 const git = (dir, ...a) => execFileSync('git', ['-C', dir, ...a], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
-const hook = (arq, entrada) => {
-  const r = spawnSync('node', [`${H}/${arq}`], { input: JSON.stringify(entrada), encoding: 'utf8' });
+const hook = (arq, entrada, env = {}) => {
+  const r = spawnSync('node', [`${H}/${arq}`], { input: JSON.stringify(entrada), encoding: 'utf8', env: { ...process.env, JETRO_HOOKS_DESLIGADOS: '', ...env } });
   return { code: r.status, out: r.stdout, err: r.stderr };
 };
 const linhas = (n, p = 'x') => Array.from({ length: n }, (_, i) => `${p}${i}`).join('\n') + '\n';
@@ -233,6 +233,95 @@ ok('sem package.json exit 2', r.status === 2 && r.stdout.includes('nada verifica
 pkg({ dev: 'x' });
 r = roda(app);
 ok('sem scripts de verificação exit 2', r.status === 2, r.stdout);
+
+// ---------- config-protection
+const cfg = `${raiz}/cfg`;
+fs.mkdirSync(cfg);
+fs.writeFileSync(`${cfg}/.eslintrc.json`, '{}');
+fs.writeFileSync(`${cfg}/eslint.config.base.mjs`, 'export default []');
+fs.writeFileSync(`${cfg}/tsconfig.json`, '{ "compilerOptions": { "strict": true } }');
+fs.writeFileSync(`${cfg}/a.ts`, 'x');
+const ed = (file_path, old_string, new_string) => ({ tool_name: 'Edit', tool_input: { file_path, old_string, new_string } });
+ok('lint existente barra', hook('config-protection.mjs', ed(`${cfg}/.eslintrc.json`, '{}', '{"rules":{}}')).code === 2);
+ok('lint base com qualificador barra', hook('config-protection.mjs', ed(`${cfg}/eslint.config.base.mjs`, '[]', '[{}]')).code === 2);
+ok('lint novo passa', hook('config-protection.mjs', { tool_name: 'Write', tool_input: { file_path: `${cfg}/eslint.config.mjs`, content: 'x' } }).code === 0);
+ok('arquivo comum passa', hook('config-protection.mjs', ed(`${cfg}/a.ts`, 'x', 'y')).code === 0);
+r = hook('config-protection.mjs', ed(`${cfg}/tsconfig.json`, '"strict": true', '"strict": false'));
+ok('tsconfig strict false barra', r.code === 2 && r.err.includes('TypeScript'), JSON.stringify(r));
+ok('tsconfig noImplicitAny false barra', hook('config-protection.mjs', ed(`${cfg}/tsconfig.json`, '"strict": true', '"strict": true, "noImplicitAny": false')).code === 2);
+ok('tsconfig sem afrouxar passa', hook('config-protection.mjs', ed(`${cfg}/tsconfig.json`, '"strict": true', '"strict": true, "paths": {}')).code === 0);
+ok('tsconfig Write tirando strict barra', hook('config-protection.mjs', { tool_name: 'Write', tool_input: { file_path: `${cfg}/tsconfig.json`, content: '{ "compilerOptions": {} }' } }).code === 2);
+ok('tsconfig Write mantendo strict passa', hook('config-protection.mjs', { tool_name: 'Write', tool_input: { file_path: `${cfg}/tsconfig.json`, content: '{ "compilerOptions": { "strict": true, "jsx": "react-jsx" } }' } }).code === 0);
+ok('tsconfig MultiEdit afrouxando barra', hook('config-protection.mjs', { tool_name: 'MultiEdit', tool_input: { file_path: `${cfg}/tsconfig.json`, edits: [{ old_string: 'a', new_string: 'b' }, { old_string: '"strict": true', new_string: '"strictNullChecks": false, "strict": true' }] } }).code === 2);
+ok('config-protection desligado passa', hook('config-protection.mjs', ed(`${cfg}/.eslintrc.json`, '{}', '{"rules":{}}'), { JETRO_HOOKS_DESLIGADOS: 'config-protection' }).code === 0);
+
+// ---------- liga/desliga nos hooks antigos
+const grandeArq = `${raiz}/grande-leitura.txt`;
+fs.writeFileSync(grandeArq, 'x'.repeat(30 * 1024));
+ok('leitura-grande ligado barra', hook('leitura-grande.mjs', { tool_input: { file_path: grandeArq } }).code === 2);
+ok('leitura-grande com * passa', hook('leitura-grande.mjs', { tool_input: { file_path: grandeArq } }, { JETRO_HOOKS_DESLIGADOS: '*' }).code === 0);
+ok('leitura-grande com outro nome desligado barra', hook('leitura-grande.mjs', { tool_input: { file_path: grandeArq } }, { JETRO_HOOKS_DESLIGADOS: 'cost-tracker' }).code === 2);
+ok('revisor-push desligado passa', hook('revisor-push.mjs', entrada(`git -C ${repo} push`, 'D:/OS'), { JETRO_HOOKS_DESLIGADOS: 'revisor-push' }).code === 0);
+
+// ---------- cost-tracker
+const ct = `${raiz}/custos`;
+const tmpProj = `${ct}/temp-proj`;
+fs.mkdirSync(`${ct}/sess1/subagents`, { recursive: true });
+fs.mkdirSync(tmpProj);
+const msg = (id, model, u) => JSON.stringify({ type: 'assistant', message: { id, model, usage: u } });
+const M = 1_000_000;
+fs.writeFileSync(`${ct}/sess1.jsonl`, [
+  JSON.stringify({ type: 'user', message: { content: 'oi' } }),
+  msg('m1', 'claude-opus-5-5', { input_tokens: M, output_tokens: 0 }),
+  msg('m1', 'claude-opus-5-5', { input_tokens: M, output_tokens: 0 }),
+  msg('m2', 'claude-opus-5-5', { input_tokens: 0, output_tokens: M, cache_read_input_tokens: M, cache_creation_input_tokens: M, cache_creation: { ephemeral_1h_input_tokens: M, ephemeral_5m_input_tokens: 0 } }),
+].join('\n') + '\n');
+fs.writeFileSync(`${ct}/sess1/subagents/agent-a.jsonl`, msg('s1', 'claude-haiku-5-5', { input_tokens: M, output_tokens: 0 }) + '\n');
+fs.writeFileSync(`${tmpProj}/mem1.jsonl`, JSON.stringify({ type: 'user', message: { content: 'Siga.\nVocê atualiza a memória pessoal do usuário a partir' } }) + '\n' + msg('h1', 'claude-haiku-5-5', { input_tokens: 50_000, output_tokens: 0 }) + '\n');
+fs.writeFileSync(`${tmpProj}/outro.jsonl`, JSON.stringify({ type: 'user', message: { content: 'outra coisa' } }) + '\n' + msg('o1', 'claude-haiku-5-5', { input_tokens: M }) + '\n');
+const ctEnv = { OS_CUSTOS_ARQ: `${ct}/custos.tsv`, OS_CUSTOS_TEMP_DIR: tmpProj };
+hook('cost-tracker.mjs', { session_id: 'sess1', transcript_path: `${ct}/sess1.jsonl` }, ctEnv);
+let led = fs.readFileSync(`${ct}/custos.tsv`, 'utf8').trim().split('\n').map((l) => l.split('\t'));
+const sess = led.find((c) => c[1] === 'sess1');
+// opus 5.5: 1M entrada (4) + 1M saída (20) + 1M leitura (0,2) + 1M escrita 1h (8) = 32,2
+// subagente haiku 5.5 com 1M de prompt cai na faixa acima de 100K (5x): 0,5. Total 32,7.
+ok('cost-tracker soma sessão + subagente sem duplicar', sess && Math.abs(Number(sess[8]) - 32.7) < 0.001, JSON.stringify(sess));
+const mem = led.find((c) => c[1] === 'mem1');
+// memoria: 50K de prompt, faixa até 100K: 0,05 * 0,1 = 0,005
+ok('cost-tracker registra memoria', mem && mem[2] === 'memoria' && Math.abs(Number(mem[8]) - 0.005) < 0.0001, JSON.stringify(led));
+ok('cost-tracker ignora transcript que não é memoria', !led.some((c) => c[1] === 'outro'));
+hook('cost-tracker.mjs', { session_id: 'sess2', transcript_path: `${ct}/sess1.jsonl` }, ctEnv);
+const ledTxt = fs.readFileSync(`${ct}/custos.tsv`, 'utf8').trim().split('\n');
+ok('cost-tracker não repete memoria', ledTxt.filter((l) => l.includes('\tmem1\t')).length === 1, ledTxt.join('|'));
+r = spawnSync('node', [`${H}/cost-tracker.mjs`, '--resumo'], { encoding: 'utf8', env: { ...process.env, ...ctEnv } });
+ok('cost-tracker resumo', r.status === 0 && r.stdout.includes('US$'), r.stdout + r.stderr);
+fs.rmSync(`${ct}/custos.tsv`);
+hook('cost-tracker.mjs', { session_id: 'sess1', transcript_path: `${ct}/sess1.jsonl` }, { ...ctEnv, JETRO_HOOKS_DESLIGADOS: 'cost-tracker' });
+ok('cost-tracker desligado não grava', !fs.existsSync(`${ct}/custos.tsv`));
+
+// ---------- suggest-compact
+const sc = `${raiz}/sc.jsonl`;
+const sid = `teste${Date.now()}`;
+const ctxEm = (n) => fs.appendFileSync(sc, msg(`c${n}`, 'claude-opus-5-5', { input_tokens: 10, cache_read_input_tokens: n - 10 }) + '\n');
+const scHook = (env) => hook('suggest-compact.mjs', { session_id: sid, transcript_path: sc, hook_event_name: 'PostToolUse' }, env);
+fs.writeFileSync(sc, '');
+ctxEm(80_000);
+ok('suggest-compact abaixo do limiar quieto', scHook().out === '');
+ctxEm(130_000);
+r = scHook();
+ok('suggest-compact avisa no limiar', r.out.includes('/compact') && JSON.parse(r.out).hookSpecificOutput.additionalContext.includes('130k'), r.out);
+ok('suggest-compact não repete logo', scHook().out === '');
+ctxEm(165_000);
+ok('suggest-compact avisa de novo +30k', scHook().out.includes('165k'));
+fs.appendFileSync(sc, JSON.stringify({ type: 'assistant', isSidechain: true, message: { id: 'side', usage: { input_tokens: 5 } } }) + '\n');
+ok('suggest-compact ignora subagente', scHook().out === '');
+ctxEm(20_000);
+scHook();
+ctxEm(125_000);
+ok('suggest-compact volta a valer depois de compactar', scHook().out.includes('125k'));
+ctxEm(170_000);
+ok('suggest-compact desligado quieto', scHook({ JETRO_HOOKS_DESLIGADOS: 'suggest-compact' }).out === '');
+fs.rmSync(path.join(os.tmpdir(), `jetro-compact-${sid}.json`), { force: true });
 
 fs.rmSync(raiz, { recursive: true, force: true, maxRetries: 5 });
 console.log(falhas ? `\n${falhas} FALHA(S)` : '\ntudo certo');

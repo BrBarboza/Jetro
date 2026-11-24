@@ -30,6 +30,10 @@ Ferramentas, tecnologias, materiais — o que o projeto usa pra existir.
 
 Projetos ou domínios conectados e a natureza da relação (ex: "replica modelo de permissões do ProjetoB").
 
+## Ferramentas
+
+Kit e ferramentas que este projeto usa e o que funcionou (1–3 linhas), para não abrir a caixa de ferramentas. Ex.: `- kit-app-web; e2e com Playwright em tests/`. Sem kit: "nenhum kit ainda".
+
 ## Estado
 
 Forma e maturidade atual + decisões que continuam valendo, em frases curtas. Não é log de sessão.

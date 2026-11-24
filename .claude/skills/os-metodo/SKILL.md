@@ -34,6 +34,6 @@ Quem executa pode ser outro modelo: o plano leva tudo que ele precisa, sem depen
 | Critério testável antes de começar; plano com verificação por passo | `CLAUDE.md` § ENGENHARIA MÍNIMA, item 4 |
 | Mudança mínima e cirúrgica; fora do escopo só se menciona | `CLAUDE.md` § ENGENHARIA MÍNIMA, itens 1 a 3 |
 | Ler o que existe antes de criar | `CLAUDE.md` § ROTEIRO, passos 1 a 3 |
-| Parar e perguntar em ação destrutiva, sem volta ou que chega a outros | `CLAUDE.md` § ROTEIRO, passo 6 |
-| Como rodar a verificação e o limite de voltas do loop | `CLAUDE.md` § AGENTES |
+| Parar e perguntar em ação destrutiva, sem volta ou que chega a outros | `CLAUDE.md` § ROTEIRO, passo 7 |
+| Como rodar a verificação e o limite de voltas do loop | `CLAUDE.md` § AGENTES E HOOKS |
 | Quantas perguntas e em que linguagem; formato e ordem do plano; lista de teste para o usuário; resposta sem narrar processo | `eu/preferencias.md` |
