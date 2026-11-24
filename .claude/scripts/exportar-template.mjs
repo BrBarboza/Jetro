@@ -298,7 +298,7 @@ SOFTWARE.
 
 // Arquivo gerenciado (lista branca) que não veio desta vez saiu do mecanismo: sai do público também.
 // Destino com git: só o que o git rastreia (arquivo local não rastreado fica).
-const rastreados = temGit && new Set(execFileSync('git', ['-C', destino, 'ls-files'], { encoding: 'utf8' }).split('\n'));
+const rastreados = temGit && new Set(execFileSync('git', ['-C', destino, 'ls-files', '-z'], { encoding: 'utf8' }).split('\0'));
 (function limpar(dir) {
   for (const nome of fs.readdirSync(dir)) {
     if (nome === '.git' || nome === 'node_modules') continue;

@@ -30,7 +30,7 @@ try {
     }
   };
   // Exportou mas o publicador parou antes do commit (teste vermelho, vazamento): a assinatura já está em dia.
-  if (!mudou.length && gitDestino('status', '--porcelain')) {
+  if (!mudou.length && gitDestino('status', '--porcelain', '--untracked-files=no')) {
     avisos.push(`Público com mudança sem commit em ${estado.destino}: o publicador parou no meio. Chame o publicador de novo.`);
   }
   const aFrente = Number(gitDestino('rev-list', '--count', '@{u}..HEAD')) || 0;
