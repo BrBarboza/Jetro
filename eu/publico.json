@@ -1,0 +1,5 @@
+{
+  "_leia": "Só para quem mantém uma versão pública do próprio Jetro: proibidos = regex que abortam o export; trocas = [regex, troca] aplicadas no texto. Nunca é exportado.",
+  "proibidos": [],
+  "trocas": []
+}

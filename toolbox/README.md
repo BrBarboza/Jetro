@@ -29,7 +29,7 @@ O script clona com `--depth 1` e exclui `CLAUDE.md`, `AGENTS.md` e `.claude/` da
    `Origem: ecc @ 4adeee6 — rules/typescript/coding-style.md (adaptado)`
 5. Anotar no `## Ferramentas` do manifest do projeto qual kit/ferramenta usou e o que funcionou.
 
-Pago, global (fora do `.mcp.json`/`.claude/` da raiz) ou que mexe fora de `D:\OS` → trava de risco, pergunta antes.
+Pago, global (fora do `.mcp.json`/`.claude/` da raiz) ou que mexe fora da pasta do Jetro → trava de risco, pergunta antes.
 
 ## Peças já adaptadas
 

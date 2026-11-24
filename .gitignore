@@ -18,4 +18,5 @@ build/
 .claude/hooks/.memoria.lock
 .claude/hooks/auto-git
 .claude/hooks/custos.tsv
+.claude/hooks/.publico-sync.json
 /toolbox/estoque/

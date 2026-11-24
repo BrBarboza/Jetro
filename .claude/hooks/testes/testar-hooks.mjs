@@ -1,4 +1,4 @@
-// Testes de revisor-push, manifest-atraso, verificar, config-protection, cost-tracker, suggest-compact e liga/desliga. Uso: node .claude/hooks/testes/testar-hooks.mjs
+// Testes de revisor-push, manifest-atraso, verificar, config-protection, cost-tracker, suggest-compact, publico-atraso e liga/desliga. Uso: node .claude/hooks/testes/testar-hooks.mjs
 // Repositórios descartáveis ficam na pasta temporária do sistema e saem no fim. Precisa de bun e internet (instala typescript).
 import { execFileSync, spawnSync } from 'node:child_process';
 import fs from 'node:fs';
@@ -53,20 +53,20 @@ ok('heredoc citando push não barra', hook('revisor-push.mjs', entrada(`git comm
 ok('here-string citando push não barra', hook('revisor-push.mjs', entrada(`git commit -m @'\ngit push\n'@`)).code === 0);
 ok('git log não barra', hook('revisor-push.mjs', entrada('git log --grep push')).code === 0);
 ok('outro comando não barra', hook('revisor-push.mjs', entrada('echo oi')).code === 0);
-ok('git -C barra', hook('revisor-push.mjs', entrada(`git -C ${repo} push`, 'D:/OS')).code === 2);
-ok('git -C com aspas barra', hook('revisor-push.mjs', entrada(`git -C "${repo}" push origin main`, 'D:/OS')).code === 2);
-ok('cd && git push barra', hook('revisor-push.mjs', entrada(`cd ${repo} && git push`, 'D:/OS')).code === 2);
-ok('cd caminho posix barra', hook('revisor-push.mjs', entrada(`cd /${repo[0].toLowerCase()}/${repo.slice(3)} && git push`, 'D:/OS')).code === 2);
+ok('git -C barra', hook('revisor-push.mjs', entrada(`git -C ${repo} push`, '.')).code === 2);
+ok('git -C com aspas barra', hook('revisor-push.mjs', entrada(`git -C "${repo}" push origin main`, '.')).code === 2);
+ok('cd && git push barra', hook('revisor-push.mjs', entrada(`cd ${repo} && git push`, '.')).code === 2);
+ok('cd caminho posix barra', hook('revisor-push.mjs', entrada(`cd /${repo[0].toLowerCase()}/${repo.slice(3)} && git push`, '.')).code === 2);
 ok('rtk git push barra', hook('revisor-push.mjs', entrada('rtk git push')).code === 2);
 
-ok('cd; git push barra', hook('revisor-push.mjs', entrada(`cd ${repo}; git push`, 'D:/OS')).code === 2);
+ok('cd; git push barra', hook('revisor-push.mjs', entrada(`cd ${repo}; git push`, '.')).code === 2);
 ok('--delete não barra', hook('revisor-push.mjs', entrada('git push origin --delete foo')).code === 0);
 ok('-d não barra', hook('revisor-push.mjs', entrada('git push origin -d foo')).code === 0);
 ok('--tags não barra', hook('revisor-push.mjs', entrada('git push --tags')).code === 0);
 ok('--dry-run não barra', hook('revisor-push.mjs', entrada('git push --dry-run')).code === 0);
 ok('-n não barra', hook('revisor-push.mjs', entrada('git push -n')).code === 0);
 ok('flag de outro comando não libera', hook('revisor-push.mjs', entrada('git push && git branch -d velho')).code === 2);
-ok('git -C commit && push é tratado como commit', hook('revisor-push.mjs', entrada(`git -C ${repo} commit -am x && git -C ${repo} push`, 'D:/OS')).err.includes('commit sozinho'));
+ok('git -C commit && push é tratado como commit', hook('revisor-push.mjs', entrada(`git -C ${repo} commit -am x && git -C ${repo} push`, '.')).err.includes('commit sozinho'));
 
 // lockfile e gerado não contam
 const repo2 = `${raiz}/lock-teste`;
@@ -261,7 +261,7 @@ fs.writeFileSync(grandeArq, 'x'.repeat(30 * 1024));
 ok('leitura-grande ligado barra', hook('leitura-grande.mjs', { tool_input: { file_path: grandeArq } }).code === 2);
 ok('leitura-grande com * passa', hook('leitura-grande.mjs', { tool_input: { file_path: grandeArq } }, { JETRO_HOOKS_DESLIGADOS: '*' }).code === 0);
 ok('leitura-grande com outro nome desligado barra', hook('leitura-grande.mjs', { tool_input: { file_path: grandeArq } }, { JETRO_HOOKS_DESLIGADOS: 'cost-tracker' }).code === 2);
-ok('revisor-push desligado passa', hook('revisor-push.mjs', entrada(`git -C ${repo} push`, 'D:/OS'), { JETRO_HOOKS_DESLIGADOS: 'revisor-push' }).code === 0);
+ok('revisor-push desligado passa', hook('revisor-push.mjs', entrada(`git -C ${repo} push`, '.'), { JETRO_HOOKS_DESLIGADOS: 'revisor-push' }).code === 0);
 
 // ---------- cost-tracker
 const ct = `${raiz}/custos`;
@@ -322,6 +322,30 @@ ok('suggest-compact volta a valer depois de compactar', scHook().out.includes('1
 ctxEm(170_000);
 ok('suggest-compact desligado quieto', scHook({ JETRO_HOOKS_DESLIGADOS: 'suggest-compact' }).out === '');
 fs.rmSync(path.join(os.tmpdir(), `jetro-compact-${sid}.json`), { force: true });
+
+// ---------- publico-atraso
+const { assinatura } = await import(new URL('../../scripts/publico-lista.mjs', import.meta.url));
+const pa = `${raiz}/pa-os`;
+const pub = `${raiz}/pa-publico`;
+fs.mkdirSync(`${pa}/.claude/hooks`, { recursive: true });
+fs.writeFileSync(`${pa}/CLAUDE.md`, 'regra 1\n');
+fs.writeFileSync(`${pa}/.claude/hooks/x.mjs`, '// x\n');
+execFileSync('git', ['clone', '-q', bare, pub], { stdio: 'ignore' });
+const paHook = (env = {}) => hook('publico-atraso.mjs', {}, { JETRO_RAIZ: pa, ...env }).out;
+ok('publico-atraso sem estado quieto', paHook() === '');
+fs.writeFileSync(`${pa}/.claude/hooks/.publico-sync.json`, JSON.stringify({ destino: '../pa-publico', arquivos: assinatura(pa) }));
+ok('publico-atraso em dia quieto', paHook() === '');
+fs.writeFileSync(`${pa}/CLAUDE.md`, 'regra 1\nregra 2\n');
+ok('publico-atraso mecanismo mudou avisa', paHook().includes('Público atrasado: 1 arquivo(s)') && paHook().includes('CLAUDE.md'), paHook());
+fs.writeFileSync(`${pa}/.claude/hooks/novo.mjs`, '// novo\n');
+ok('publico-atraso arquivo novo conta', paHook().includes('2 arquivo(s)'), paHook());
+git(pub, 'config', 'user.email', 't@t');
+git(pub, 'config', 'user.name', 't');
+fs.writeFileSync(`${pub}/b.txt`, 'b\n');
+git(pub, 'add', '.');
+git(pub, 'commit', '-qm', 'pronto');
+ok('publico-atraso commit sem push avisa', paHook().includes('aguardando push: 1 commit'), paHook());
+ok('publico-atraso desligado quieto', paHook({ JETRO_HOOKS_DESLIGADOS: 'publico-atraso' }) === '');
 
 fs.rmSync(raiz, { recursive: true, force: true, maxRetries: 5 });
 console.log(falhas ? `\n${falhas} FALHA(S)` : '\ntudo certo');

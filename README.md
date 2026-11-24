@@ -70,6 +70,7 @@ Na sexta você comenta de passagem que passou a estudar para um concurso. Isso e
 | Skill `os-tradutor` | Pedido bagunçado (áudio, ideias misturadas, objetivo vago) vira pedido claro antes de executar: "Entendi assim", "Pronto quando", o que assumiu e o que ficou fora; no máximo 3 perguntas de clicar, numa rodada só. |
 | Skills `os-*` | Importar projeto, retomar de onde parou, fechar sessão, processar a inbox, aplicar padrão de um projeto em outro, método para tarefas longas. |
 | `.claude/scripts/verificar.mjs` | Roda typecheck, lint, build e testes e devolve só as falhas. |
+| Agente `publicador` e hook `publico-atraso` | Para quem mantém uma versão pública do próprio Jetro: o hook avisa no início da sessão quando o mecanismo mudou; o agente exporta só a lista branca, generaliza o que é pessoal, escreve o CHANGELOG e deixa o commit pronto, sem push. Termos pessoais ficam em `eu/publico.json`. |
 
 Conhecimento técnico que você reaproveita entre projetos vira skill `.claude/skills/tec-<nome>/`, que o Claude carrega sozinho quando a tarefa casa com a descrição. Nenhuma vem pronta: nascem do seu uso. Kits (`kit-*`) podem vir prontos: são ferramenta, não lição vivida.
 

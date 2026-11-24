@@ -1,5 +1,17 @@
 {
   "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/publico-atraso.mjs\"",
+            "timeout": 15
+          }
+        ]
+      }
+    ],
     "SessionEnd": [
       {
         "matcher": "",
