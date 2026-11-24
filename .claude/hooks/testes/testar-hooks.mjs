@@ -347,6 +347,8 @@ git(pub, 'commit', '-qm', 'pronto');
 ok('publico-atraso commit sem push avisa', paHook().includes('aguardando push: 1 commit'), paHook());
 fs.writeFileSync(`${pa}/.claude/hooks/.publico-sync.json`, JSON.stringify({ destino: '../pa-publico', arquivos: assinatura(pa) }));
 fs.writeFileSync(`${pub}/c.txt`, 'c\n');
+ok('publico-atraso ignora arquivo não rastreado', !paHook().includes('sem commit'), paHook());
+fs.writeFileSync(`${pub}/b.txt`, 'b2\n');
 ok('publico-atraso mudança sem commit avisa', paHook().includes('sem commit'), paHook());
 ok('publico-atraso desligado quieto', paHook({ JETRO_HOOKS_DESLIGADOS: 'publico-atraso' }) === '');
 
