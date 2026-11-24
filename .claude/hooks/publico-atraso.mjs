@@ -22,10 +22,18 @@ try {
   if (mudou.length) {
     avisos.push(`Público atrasado: ${mudou.length} arquivo(s) de mecanismo mudaram desde a última exportação (${mudou.slice(0, 8).join(', ')}${mudou.length > 8 ? ', …' : ''}). Chame o publicador.`);
   }
-  let aFrente = 0;
-  try {
-    aFrente = Number(execFileSync('git', ['-C', path.resolve(RAIZ, estado.destino), 'rev-list', '--count', '@{u}..HEAD'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim());
-  } catch {}
+  const gitDestino = (...a) => {
+    try {
+      return execFileSync('git', ['-C', path.resolve(RAIZ, estado.destino), ...a], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
+    } catch {
+      return '';
+    }
+  };
+  // Exportou mas o publicador parou antes do commit (teste vermelho, vazamento): a assinatura já está em dia.
+  if (!mudou.length && gitDestino('status', '--porcelain')) {
+    avisos.push(`Público com mudança sem commit em ${estado.destino}: o publicador parou no meio. Chame o publicador de novo.`);
+  }
+  const aFrente = Number(gitDestino('rev-list', '--count', '@{u}..HEAD')) || 0;
   if (aFrente > 0) {
     avisos.push(`Público pronto e aguardando push: ${aFrente} commit(s) em ${estado.destino}. Mostre em 3 a 5 linhas o que sobe e peça OK antes do push.`);
   }

@@ -4,6 +4,7 @@
 // manifest e qualquer outro arquivo do repo público ficam intactos. Termos pessoais e trocas vêm de
 // eu/publico.json (dado do dono, nunca exportado); uma varredura final aborta se sobrar algo pessoal
 // ou segredo. Destino com .git: grava a assinatura (.claude/hooks/.publico-sync.json) para o hook publico-atraso.
+import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -19,7 +20,13 @@ if (!destino || destino === ORIGEM || (destino.startsWith(ORIGEM + path.sep) && 
 }
 
 // ── Termos pessoais: eu/publico.json (nunca exportado) ─────────────────────────────────────────
-const termos = fs.existsSync(path.join(ORIGEM, 'eu', 'publico.json')) ? JSON.parse(fs.readFileSync(path.join(ORIGEM, 'eu', 'publico.json'), 'utf8')) : {};
+const TERMOS = path.join(ORIGEM, 'eu', 'publico.json');
+const temGit = fs.existsSync(path.join(destino, '.git'));
+if (temGit && !fs.existsSync(TERMOS)) {
+  console.error('BLOQUEADO: destino é um repo e eu/publico.json não existe; sem ele a varredura não acha termo pessoal.');
+  process.exit(2);
+}
+const termos = fs.existsSync(TERMOS) ? JSON.parse(fs.readFileSync(TERMOS, 'utf8')) : {};
 const PROIBIDOS = (termos.proibidos || []).map((p) => new RegExp(p, 'i'));
 const TROCAS = (termos.trocas || []).map(([de, para]) => [new RegExp(de, 'g'), para]);
 const BARRA = ORIGEM.split(path.sep).join('/');
@@ -290,13 +297,15 @@ SOFTWARE.
 );
 
 // Arquivo gerenciado (lista branca) que não veio desta vez saiu do mecanismo: sai do público também.
+// Destino com git: só o que o git rastreia (arquivo local não rastreado fica).
+const rastreados = temGit && new Set(execFileSync('git', ['-C', destino, 'ls-files'], { encoding: 'utf8' }).split('\n'));
 (function limpar(dir) {
   for (const nome of fs.readdirSync(dir)) {
     if (nome === '.git' || nome === 'node_modules') continue;
     const f = path.join(dir, nome);
     const rel = norm(path.relative(destino, f));
     if (fs.statSync(f).isDirectory()) { limpar(f); if (!fs.readdirSync(f).length) fs.rmdirSync(f); continue; }
-    if (/^(\.claude\/(hooks|agents|scripts|skills)|templates)\//.test(rel) && !escritos.has(rel)) fs.rmSync(f);
+    if (/^(\.claude\/(hooks|agents|scripts|skills)|templates)\//.test(rel) && !escritos.has(rel) && (!rastreados || rastreados.has(rel))) fs.rmSync(f);
   }
 })(destino);
 
@@ -322,7 +331,7 @@ if (achados.length) {
   console.error(`BLOQUEADO: ${achados.length} ocorrência(s) pessoal(is) no template:\n` + achados.join('\n'));
   process.exit(2);
 }
-if (fs.existsSync(path.join(destino, '.git'))) {
+if (temGit) {
   fs.writeFileSync(path.join(ORIGEM, ESTADO), JSON.stringify({ destino: norm(path.relative(ORIGEM, destino)), arquivos: assinatura(ORIGEM) }, null, 1) + '\n');
 }
 console.log(`template gerado em ${destino}`);
