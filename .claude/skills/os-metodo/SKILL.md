@@ -17,15 +17,17 @@ Quem executa pode ser outro modelo: o plano leva tudo que ele precisa, sem depen
 2. **Pronto quando.** 3 a 6 condições observáveis: algo que se roda, abre ou mede e responde sim ou não. "Funciona bem" não é condição. Condição que o usuário já deu entra literal, sem reescrever.
 3. **Pedido × suposição.** Duas listas: o que ele pediu e o que você está supondo. Suposição barata de desfazer: segue e vai declarada na entrega. Suposição cara ou sem volta: vira pergunta antes de continuar.
 4. **Risco provado antes.** Ache a etapa que, se falhar, derruba o plano. Prove-a com o menor teste possível (uma chamada, uma consulta de leitura, um rascunho) antes de fechar o plano. Se a prova exigir escrita, ela entra no plano marcada como prova pendente.
-5. **Plano para o executor.** Além das etapas, o plano carrega a frase, o "pronto quando", as suposições e o resultado da prova de risco.
+5. **Tarefas do tamanho certo.** Cada tarefa entrega algo testável sozinho; preparo e configuração entram na tarefa que precisa deles. Separar só onde um revisor poderia recusar uma e aprovar a vizinha. (Origem: `superpowers` @ 22f0b46 — `skills/writing-plans`, adaptado.)
+6. **Plano para o executor.** Além das etapas, o plano carrega a frase, o "pronto quando", as suposições e o resultado da prova de risco.
 
 ## Execução (Sonnet)
 
 1. **Uma etapa por vez.** A seguinte só começa com a anterior verificada.
-2. **Plano furou** (premissa falsa, etapa impossível, "pronto quando" inalcançável): não redesenhe aqui. Pare, diga o que furou e volte ao planejamento.
-3. **Falha.** Leia o erro inteiro, não só a última linha. Escreva uma hipótese e teste só ela. Volta sem progresso não repete a tentativa: troca a hipótese ou a abordagem.
-4. **Conferência final.** Cada item do "pronto quando" com evidência (saída de comando, print, linha de arquivo); sem evidência, o item sai como "não verificado". Teste o caminho feliz e pelo menos dois casos ruins que façam sentido (vazio, inválido, sem permissão, duplicado). Releia o pedido original e compare com a entrega: o que faltou, o que sobrou.
-5. **Entrega.** Depois do resultado, uma linha para cada: o que não foi feito, o que não foi testado, o que foi suposto. Lista vazia não aparece.
+2. **Revisão por tarefa** (projeto, não ajuste pequeno): ao fechar cada tarefa, um subagente novo recebe a tarefa, as regras do plano e o diff, e responde duas coisas: fez o que a tarefa pede? o código está bom? Qualquer "não" volta para correção antes da próxima. (Origem: `superpowers` — `skills/subagent-driven-development`, adaptado.)
+3. **Plano furou** (premissa falsa, etapa impossível, "pronto quando" inalcançável): não redesenhe aqui. Pare, diga o que furou e volte ao planejamento.
+4. **Falha.** Leia o erro inteiro, não só a última linha. Escreva uma hipótese e teste só ela. Volta sem progresso não repete a tentativa: troca a hipótese ou a abordagem.
+5. **Conferência final.** Cada item do "pronto quando" com evidência (saída de comando, print, linha de arquivo); sem evidência, o item sai como "não verificado". Teste o caminho feliz e pelo menos dois casos ruins que façam sentido (vazio, inválido, sem permissão, duplicado). Releia o pedido original e compare com a entrega: o que faltou, o que sobrou.
+6. **Entrega.** Depois do resultado, uma linha para cada: o que não foi feito, o que não foi testado, o que foi suposto. Lista vazia não aparece.
 
 ## Já coberto (vale igual, não repetir aqui)
 

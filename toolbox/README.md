@@ -10,6 +10,7 @@ Peças prontas de boas fontes (skills, agentes, hooks, MCP, scripts) para o Jetr
 | Nome | Repositório | O que tem de útil |
 |---|---|---|
 | `ecc` | https://github.com/affaan-m/ecc | ~330 skills, ~70 agentes, hooks (`scripts/hooks/`), regras por linguagem (`rules/`), configs de MCP (`mcp-configs/`) |
+| `superpowers` | https://github.com/obra/superpowers | Fluxo brainstorm, plano e execução por subagentes (`skills/brainstorming`, `writing-plans`, `subagent-driven-development`, `executing-plans`); referência para o `os-tradutor`. Não copiar o ritmo de pergunta a pergunta |
 
 Trocar ou somar fonte: editar esta tabela e pedir "clona o estoque". O clone/atualização roda só quando o usuário pede:
 
@@ -30,6 +31,14 @@ O script clona com `--depth 1` e exclui `CLAUDE.md`, `AGENTS.md` e `.claude/` da
 5. Anotar no `## Ferramentas` do manifest do projeto qual kit/ferramenta usou e o que funcionou.
 
 Pago, global (fora do `.mcp.json`/`.claude/` da raiz) ou que mexe fora da pasta do Jetro → trava de risco, pergunta antes.
+
+## Ferramentas da casa
+
+Feitas para o Jetro, guardadas em `estoque/` junto com os clones, mas versionadas (sem `.git` próprio, o `estoque.mjs` não mexe nelas). Só rodam quando o usuário pede: abrir o `COMO-USAR.md` da pasta e seguir.
+
+| Ferramenta | Pasta | Para quê |
+|---|---|---|
+| `kit-analise` | `estoque/kit-analise/` | Ler módulos/páginas de um app, propor melhoria com nota por pilar, avaliar e propor modularização/planos. Pedido: `pedido-modelo.md` |
 
 ## Peças já adaptadas
 

@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-11-26
+
+- O tradutor de pedidos agora decide primeiro se vale traduzir (pedido completo é só executado), avalia o tamanho, propõe 2 ou 3 caminhos quando há mais de um jeito razoável e separa as dúvidas em três grupos: já respondidas, menores (ele decide e avisa) e as que só você responde.
+- O método de planejamento divide o trabalho em tarefas que se testam sozinhas, e em projetos maiores cada tarefa fechada passa por uma revisão de um agente novo antes da próxima.
+- Nova linha de status que mostra o uso do limite de 5 horas e a hora em que ele zera.
+- O almoxarifado ganhou a fonte `superpowers` e uma seção de ferramentas da casa; a listagem não reclama mais de pastas que não são clones.
+
 ## 2026-11-24
 
 - Novo agente `publicador` e aviso no início da sessão ("Público atrasado"): quem mantém uma versão pública do próprio Jetro é avisado quando o mecanismo mudou, e o commit fica pronto sem subir sozinho.

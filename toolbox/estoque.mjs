@@ -48,5 +48,5 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
     }
   }
   const nomes = new Set(fontes.map((f) => f.nome));
-  for (const d of fs.readdirSync(ESTOQUE)) if (!nomes.has(d)) console.log(`${d}: fora do README (apagar a pasta só com ok do usuário)`);
+  for (const d of fs.readdirSync(ESTOQUE)) if (!nomes.has(d) && fs.existsSync(path.join(ESTOQUE, d, '.git'))) console.log(`${d}: fora do README (apagar a pasta só com ok do usuário)`);
 }
