@@ -38,7 +38,7 @@ Feitas para o Jetro, guardadas em `estoque/` junto com os clones, mas versionada
 
 | Ferramenta | Pasta | Para quê |
 |---|---|---|
-| `kit-analise` | `estoque/kit-analise/` | Ler módulos/páginas de um app, propor melhoria com nota por pilar, avaliar e propor modularização/planos. Pedido: `pedido-modelo.md` |
+| `kit-analise` | `estoque/kit-analise/` | Ler módulos/páginas de um app, propor melhoria com nota por pilar, avaliar e propor modularização/planos; papel opcional Leigo (usa a tela no navegador e dá nota de dificuldade 0–5). Pedido: `pedido-modelo.md` |
 
 ## Peças já adaptadas
 

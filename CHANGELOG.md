@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-27
+
+- O kit de análise de apps ganhou um papel opcional de leigo: usa a tela no navegador como um usuário comum e dá nota de dificuldade de 0 a 5.
+
 ## 2026-11-26
 
 - O tradutor de pedidos agora decide primeiro se vale traduzir (pedido completo é só executado), avalia o tamanho, propõe 2 ou 3 caminhos quando há mais de um jeito razoável e separa as dúvidas em três grupos: já respondidas, menores (ele decide e avisa) e as que só você responde.
