@@ -241,6 +241,7 @@ Na sexta você comenta de passagem que passou a estudar para um concurso. Isso e
 | \`toolbox/\` | Almoxarifado: o README lista repositórios de onde tirar peças prontas; \`node toolbox/estoque.mjs\` clona em \`toolbox/estoque/\` (fora do git). Tarefa sem kit monta um a partir dali. |
 | Skill \`os-tradutor\` | Pedido bagunçado (áudio, ideias misturadas, objetivo vago) vira pedido claro antes de executar: "Entendi assim", "Pronto quando", o que assumiu e o que ficou fora; no máximo 3 perguntas de clicar, numa rodada só. |
 | Skills \`os-*\` | Importar projeto, retomar de onde parou, fechar sessão, processar a inbox, aplicar padrão de um projeto em outro, método para tarefas longas. |
+| Skill \`os-modo-solo\` | Para quando você vai sair: digite \`/os-modo-solo\` e o Claude executa o plano inteiro sem pedir confirmação, anota as decisões que tomou e o que travou, e nunca apaga dados, faz deploy nem aplica migração. |
 | \`.claude/scripts/verificar.mjs\` | Roda typecheck, lint, build e testes e devolve só as falhas. |
 | Agente \`publicador\` e hook \`publico-atraso\` | Para quem mantém uma versão pública do próprio Jetro: o hook avisa no início da sessão quando o mecanismo mudou; o agente exporta só a lista branca, generaliza o que é pessoal, escreve o CHANGELOG e deixa o commit pronto, sem push. Termos pessoais ficam em \`eu/publico.json\`. |
 

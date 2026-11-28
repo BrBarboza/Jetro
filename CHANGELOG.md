@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-28
+
+- Novo modo solo: antes de sair, digite `/os-modo-solo` e o Claude executa o plano inteiro sem parar para confirmação, anota as decisões que tomou e o que travou, e nunca apaga dados, faz deploy nem aplica migração.
+
 ## 2026-11-27
 
 - O kit de análise de apps ganhou um papel opcional de leigo: usa a tela no navegador como um usuário comum e dá nota de dificuldade de 0 a 5.
